@@ -1,15 +1,13 @@
 import sys
 
-from scapy.contrib.gtp import GTP_U_Header
 from scapy.all import *
+from scapy.contrib.gtp import GTP_U_Header
 from time import sleep
 
 
 if __name__ == '__main__':
-
     if len(sys.argv) == 3:
         while True:
-
             p = IP(
                 version=4,
                 dst=sys.argv[1]) / \
@@ -24,8 +22,7 @@ if __name__ == '__main__':
                     npdu=0,
                     next_ex=133
                 )
-
             send(p)
             sleep(2)
     else:
-        print("Usage: gtp_gnb <IP dest> <TEID>")
+        print("Usage: gtp_gnb.py <IP dest> <TEID>")
