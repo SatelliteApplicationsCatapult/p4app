@@ -10,6 +10,8 @@ sock = socket.socket(socket.AF_INET,    # Internet
 
 sock.bind((UDP_IP, UDP_PORT))
 
+print("Listening on UDP port %d..." %UDP_PORT)
+
 while True:
     data, src = sock.recvfrom(1024) # buffer size is 1024 bytes
     ip_addr, port = src
