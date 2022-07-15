@@ -26,6 +26,25 @@ header ipv4_t {
     bit<32> dstAddr;
 }
 
+header udp_t {
+    bit<16> srcPort;
+    bit<16> dstPort;
+    bit<16> plength;
+    bit<16> checksum;
+}
+
+header gtp_t {
+    bit<3>  ver;
+    bit<1>  pt;
+    bit<1>  rsvd;
+    bit<1>  e;
+    bit<1>  s;
+    bit<1>  pn;
+    bit<8>  msgtype;
+    bit<16> total_len;
+    bit<32> teid;
+}
+
 
 struct metadata {
     @name("ingress_metadata")
@@ -37,6 +56,10 @@ struct headers {
     ethernet_t ethernet;
     @name("ipv4")
     ipv4_t     ipv4;
+    @name("udp")
+    udp_t udp;
+    @name("gtp")
+    gtp_t gtp;
 }
 
 #endif // __HEADER_P4__

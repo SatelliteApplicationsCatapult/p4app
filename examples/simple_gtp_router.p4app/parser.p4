@@ -1,13 +1,31 @@
+const bit<16> ETH_TYPE_IPV4 = 0x800;
+const bit<8> IPV4_PROTO_UDP = 0x11;
+const bit<16> UDP_PROTO_GTP = 0x0868;
+
 parser ParserImpl(packet_in packet, out headers hdr, inout metadata meta, inout standard_metadata_t standard_metadata) {
     state parse_ethernet {
         packet.extract(hdr.ethernet);
         transition select(hdr.ethernet.etherType) {
-            16w0x800: parse_ipv4;
+            ETH_TYPE_IPV4: parse_ipv4;
             default: accept;
         }
     }
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
+        transition select(hdr.ipv4.protocol) {
+            IPV4_PROTO_UDP: parse_udp;
+            default: accept;
+        }
+    }
+    state parse_udp {
+        packet.extract(hdr.udp);
+        transition select(hdr.udp.dstPort) {
+            UDP_PROTO_GTP: parse_gtp;
+            default: accept;
+        }
+    }
+    state parse_gtp {
+        packet.extract(hdr.gtp);
         transition accept;
     }
     state start {
@@ -19,6 +37,8 @@ control DeparserImpl(packet_out packet, in headers hdr) {
     apply {
         packet.emit(hdr.ethernet);
         packet.emit(hdr.ipv4);
+        packet.emit(hdr.udp);
+        packet.emit(hdr.gtp);
     }
 }
 

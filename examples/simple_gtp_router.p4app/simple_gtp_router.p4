@@ -23,9 +23,27 @@ control egress(inout headers hdr, inout metadata meta, inout standard_metadata_t
         size = 256;
         default_action = NoAction();
     }
+    action rewrite_teid(bit<32> teid) {
+        hdr.gtp.teid = teid;
+    }
+    table gtp_forward {
+        actions = {
+            rewrite_teid;
+            _drop;
+            NoAction;
+        }
+        key = {
+            standard_metadata.egress_port: exact;
+        }
+        size = 1024;
+        default_action = NoAction();
+    }
     apply {
         if (hdr.ipv4.isValid()) {
           send_frame.apply();
+        }
+        if (hdr.udp.isValid()) {
+          gtp_forward.apply();
         }
     }
 }
