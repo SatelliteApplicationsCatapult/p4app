@@ -175,6 +175,12 @@ def run_mininet(manifest):
         print('To run the switch debugger, run this command from your host OS:', file=message)
         print('  docker exec -t -i %s bm_p4dbg' % container, file=message)
         print(file=message)
+        print('To execute a bash session from h1, run this command from your host OS:', file=message)
+        print('  docker exec -t -i %s m h1 bash' % container, file=message)
+        print(file=message)
+        print('To execute a bash session from h2, run this command from your host OS:', file=message)
+        print('  docker exec -t -i %s m h2 bash' % container, file=message)
+        print(file=message)
 
     switch_args.append('--cli-message "%s"' % message_file)
 
